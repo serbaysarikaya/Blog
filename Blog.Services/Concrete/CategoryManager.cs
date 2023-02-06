@@ -102,37 +102,37 @@ namespace ProgrammersBlog.Services.Concrete
         }
 
 
-    }
 
-    public async Task<IResult> Delete(int categoryId, string modifiedByName)
-    {
-        var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
-        if (category != null)
+
+        public async Task<IResult> Delete(int categoryId, string modifiedByName)
         {
-            category.IsDeleted = true;
-            category.ModifiedByName = modifiedByName;
-            category.ModifiedDate = DateTime.Now;
-            await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(category => _unitOfWork.SaveAsync());
-            return new Result(ResultStatus.Succes, $"{category.Name} adlı Kategori başarıyla silinmistir.");
+            var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
+            if (category != null)
+            {
+                category.IsDeleted = true;
+                category.ModifiedByName = modifiedByName;
+                category.ModifiedDate = DateTime.Now;
+                await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(category => _unitOfWork.SaveAsync());
+                return new Result(ResultStatus.Succes, $"{category.Name} adlı Kategori başarıyla silinmistir.");
+            }
+            return new Result(ResultStatus.Error, "Böler bir  kategori bulunamadı", null);
+
+
         }
-        return new Result(ResultStatus.Error, "Böler bir  kategori bulunamadı", null);
 
-
-    }
-
-    public async Task<IResult> HardDelete(int categoryId)
-    {
-        var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
-        if (category != null)
+        public async Task<IResult> HardDelete(int categoryId)
         {
+            var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
+            if (category != null)
+            {
 
 
-            await _unitOfWork.Categories.DeleteAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
-            return new Result(ResultStatus.Succes, $"{category.Name} adlı Kategori Veritabanından silinmistir.");
+                await _unitOfWork.Categories.DeleteAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                return new Result(ResultStatus.Succes, $"{category.Name} adlı Kategori Veritabanından silinmistir.");
+            }
+            return new Result(ResultStatus.Error, "Böler bir  kategori bulunamadı", null);
         }
-        return new Result(ResultStatus.Error, "Böler bir  kategori bulunamadı", null);
+
+
     }
-
-
-}
 }

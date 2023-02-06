@@ -36,9 +36,20 @@ namespace Blog.Services.Concrete
 
         }
 
-        public Task<IResult> Delete(int articleId, string modifiedByName)
+        public async Task<IResult> Delete(int articleId, string modifiedByName)
         {
-            throw new NotImplementedException();
+            var result = await _unitOfWork.Articles.AnyAsync(a => a.Id == articleId);
+            if (result)
+            {
+                var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId);
+                article.IsDeleted = true;
+                article.ModifiedByName= modifiedByName;
+                article.ModifiedDate= DateTime.Now;
+                await _unitOfWork.Articles.UpdateAsync(article).ContinueWith(t=>_unitOfWork.SaveAsync());
+                return new Result(ResultStatus.Succes, $"{article.Title} başlıklı makale başarıyla silinmiştir.");
+
+            }
+            return new Result(ResultStatus.Error, "Böyle bir makale bulumamamıştır.");
         }
 
         public async Task<IDataResult<ArticleDto>> Get(int articleId)
@@ -127,14 +138,28 @@ namespace Blog.Services.Concrete
 
         }
 
-        public Task<IResult> HardDelete(int articleId)
+        public async Task<IResult> HardDelete(int articleId)
         {
-            throw new NotImplementedException();
+            var result = await _unitOfWork.Articles.AnyAsync(a => a.Id == articleId);
+            if (result)
+            {
+                var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId);
+
+                await _unitOfWork.Articles.DeleteAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+                return new Result(ResultStatus.Succes, $"{article.Title} başlıklı makale başarıyla veri tabanından silinmiştir.");
+
+            }
+            return new Result(ResultStatus.Error, "Böyle bir makale bulunamamıştır.");
         }
 
-        public Task<IResult> Uptade(ArticleAddDto articleUpdateDto, string modifiedByName)
+        public async Task<IResult> Uptade(ArticleAddDto articleUpdateDto, string modifiedByName)
         {
-            throw new NotImplementedException();
+            var article = _mapper.Map<Article>(articleUpdateDto);
+            article.ModifiedByName= modifiedByName;
+            await _unitOfWork.Articles.UpdateAsync(article).ContinueWith(t=>_unitOfWork.SaveAsync());
+            return new Result(ResultStatus.Succes, $"{articleUpdateDto.Title} başlıklı makale başarıyla güncellenmiştir.");
+
+
         }
     }
 }

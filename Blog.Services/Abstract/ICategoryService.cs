@@ -11,9 +11,10 @@ namespace Blog.Services.Abstract
 {
     public interface ICategoryService
     {
-        Task<IDataResult<Category>> Get(int categoryId);
-        Task<IDataResult<IList<Category>>> GetAll();
-        Task<IDataResult<IList<Category>>> GetAllByNonDelete();
+        Task<IDataResult<CategoryDto>> Get(int categoryId);
+        Task<IDataResult<CategoryListDto>> GetAll();
+        Task<IDataResult<CategoryListDto>> GetAllByNonDelete();
+        Task<IDataResult<CategoryListDto>> GetAllByNonDeleteAndActive();
         Task<IResult> Add(CategoryAddDto categoryAddDto, string createByName);
         Task<IResult> Uptade(CategoryUpdateDto categoryUpdateDto, string modifiedByName);
         Task<IResult> Delete(int categoryId, string modifiedByName);

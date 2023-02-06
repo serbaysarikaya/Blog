@@ -1,4 +1,6 @@
-﻿using Blog.Data.Abstract;
+﻿using AutoMapper;
+using Blog.Data.Abstract;
+using Blog.Entities.Concrete;
 using Blog.Entities.Dtos;
 using Blog.Services.Abstract;
 using Blog.Shared.Utilities.Results.Abstract;
@@ -15,15 +17,23 @@ namespace Blog.Services.Concrete
     public class ArticleManager : IArticleService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public ArticleManager(IUnitOfWork unitOfWork)
+        public ArticleManager(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public Task<IResult> Add(ArticleAddDto articleAddDto, string createByName)
+        public async Task<IResult> Add(ArticleAddDto articleAddDto, string createByName)
         {
-            throw new NotImplementedException();
+            var article =  _mapper.Map<Article>(articleAddDto);
+            article.CreatedByName=createByName;
+            article.ModifiedByName=createByName;
+            article.UserId = 1;
+            await _unitOfWork.Articles.AddAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+            return new Result(ResultStatus.Succes, $"{articleAddDto.Title} başlıklı makale başarıyla eklemitir.");
+
         }
 
         public Task<IResult> Delete(int articleId, string modifiedByName)

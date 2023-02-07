@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-builder.Services.AddAutoMapper(typeof(Startup));
+builder.Services.AddAutoMapper(typeof(IStartup));//7,0!!
 builder.Services.LoadMyServices();
 
 

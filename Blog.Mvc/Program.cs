@@ -1,23 +1,11 @@
 using Blog.Services.Extensions;
-using Microsoft.AspNetCore.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Blog.Data.Abstract;
-using Blog.Data.Concrete;
-using Blog.Data.Concrete.EntityFramework.Contexts;
-using Blog.Services.Abstract;
-using Blog.Services.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-builder.Services.AddAutoMapper(typeof(IStartup));//7,0!!
+builder.Services.AddAutoMapper(typeof(Program));//7,0!! Startup?
 builder.Services.LoadMyServices();
 
 
@@ -28,12 +16,13 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseStatusCodePages();
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+//Bayrama sor
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapAreaControllerRoute(
@@ -43,6 +32,16 @@ app.UseEndpoints(endpoints =>
     );
     endpoints.MapDefaultControllerRoute();
 });
+
+//app.MapAreaControllerRoute(
+//            name: "Admin",
+//            areaName: "Admin",
+//            pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 
 app.UseRouting();
 

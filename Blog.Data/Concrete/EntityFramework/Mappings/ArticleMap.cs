@@ -110,9 +110,7 @@ namespace Blog.Data.Concrete.EntityFramework.Mappings
                                   UserId = 1,
                                   ViewsCount = 15,
                                   CommentCount = 1
-                              }
-
-                );
+                              });
         }
     }
 }

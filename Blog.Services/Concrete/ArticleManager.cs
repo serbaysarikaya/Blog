@@ -27,11 +27,12 @@ namespace Blog.Services.Concrete
 
         public async Task<IResult> Add(ArticleAddDto articleAddDto, string createByName)
         {
-            var article =  _mapper.Map<Article>(articleAddDto);
-            article.CreatedByName=createByName;
-            article.ModifiedByName=createByName;
+            var article = _mapper.Map<Article>(articleAddDto);
+            article.CreatedByName = createByName;
+            article.ModifiedByName = createByName;
             article.UserId = 1;
-            await _unitOfWork.Articles.AddAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+            await _unitOfWork.Articles.AddAsync(article);
+            await _unitOfWork.SaveAsync();
             return new Result(ResultStatus.Succes, $"{articleAddDto.Title} başlıklı makale başarıyla eklemitir.");
 
         }
@@ -43,9 +44,10 @@ namespace Blog.Services.Concrete
             {
                 var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId);
                 article.IsDeleted = true;
-                article.ModifiedByName= modifiedByName;
-                article.ModifiedDate= DateTime.Now;
-                await _unitOfWork.Articles.UpdateAsync(article).ContinueWith(t=>_unitOfWork.SaveAsync());
+                article.ModifiedByName = modifiedByName;
+                article.ModifiedDate = DateTime.Now;
+                await _unitOfWork.Articles.UpdateAsync(article);
+                await _unitOfWork.SaveAsync();
                 return new Result(ResultStatus.Succes, $"{article.Title} başlıklı makale başarıyla silinmiştir.");
 
             }
@@ -54,13 +56,13 @@ namespace Blog.Services.Concrete
 
         public async Task<IDataResult<ArticleDto>> Get(int articleId)
         {
-            var article = await _unitOfWork.Articles.GetAsync(a=>a.Id ==articleId,a=>a.User,a=>a.Category);
+            var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId, a => a.User, a => a.Category);
             if (article != null)
             {
                 return new DataResult<ArticleDto>(ResultStatus.Succes, new ArticleDto
                 {
-                    Article= article,
-                    ResultStatus=ResultStatus.Succes
+                    Article = article,
+                    ResultStatus = ResultStatus.Succes
                 });
             }
             return new DataResult<ArticleDto>(ResultStatus.Error, "Böylebir Makale Bulunmadı", null);
@@ -71,12 +73,12 @@ namespace Blog.Services.Concrete
         public async Task<IDataResult<ArticleListDto>> GetAll()
         {
             var articles = await _unitOfWork.Articles.GelAllAsync(null, a => a.User, a => a.Category);
-            if (articles.Count>-1)
+            if (articles.Count > -1)
             {
                 return new DataResult<ArticleListDto>(ResultStatus.Succes, new ArticleListDto
                 {
                     Articles = articles,
-                    ResultStatus=ResultStatus.Succes
+                    ResultStatus = ResultStatus.Succes
                 });
 
             }
@@ -88,8 +90,9 @@ namespace Blog.Services.Concrete
         public async Task<IDataResult<ArticleListDto>> GetAllByCategory(int categoryId)
         {
             var result = await _unitOfWork.Categories.AnyAsync(c => c.Id == categoryId);
-            if (result) { 
-            var articles = await _unitOfWork.Articles.GelAllAsync(a => a.CategoryId == categoryId && !a.IsDeleted && a.IsActive, ar => ar.User, ar => ar.Category);
+            if (result)
+            {
+                var articles = await _unitOfWork.Articles.GelAllAsync(a => a.CategoryId == categoryId && !a.IsDeleted && a.IsActive, ar => ar.User, ar => ar.Category);
                 if (articles.Count > -1)
                 {
                     return new DataResult<ArticleListDto>(ResultStatus.Succes, new ArticleListDto
@@ -110,7 +113,7 @@ namespace Blog.Services.Concrete
         public async Task<IDataResult<ArticleListDto>> GetAllByNonDelete()
         {
             var articles = await _unitOfWork.Articles.GelAllAsync(a => !a.IsDeleted, ar => ar.User, ar => ar.Category);
-            if (articles.Count>-1)
+            if (articles.Count > -1)
             {
                 return new DataResult<ArticleListDto>(ResultStatus.Succes, new ArticleListDto
                 {
@@ -145,7 +148,8 @@ namespace Blog.Services.Concrete
             {
                 var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId);
 
-                await _unitOfWork.Articles.DeleteAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+                await _unitOfWork.Articles.DeleteAsync(article);
+                await _unitOfWork.SaveAsync();
                 return new Result(ResultStatus.Succes, $"{article.Title} başlıklı makale başarıyla veri tabanından silinmiştir.");
 
             }
@@ -155,8 +159,9 @@ namespace Blog.Services.Concrete
         public async Task<IResult> Uptade(ArticleAddDto articleUpdateDto, string modifiedByName)
         {
             var article = _mapper.Map<Article>(articleUpdateDto);
-            article.ModifiedByName= modifiedByName;
-            await _unitOfWork.Articles.UpdateAsync(article).ContinueWith(t=>_unitOfWork.SaveAsync());
+            article.ModifiedByName = modifiedByName;
+            await _unitOfWork.Articles.UpdateAsync(article);
+            await _unitOfWork.SaveAsync();
             return new Result(ResultStatus.Succes, $"{articleUpdateDto.Title} başlıklı makale başarıyla güncellenmiştir.");
 
 

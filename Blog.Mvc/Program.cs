@@ -1,3 +1,4 @@
+using Blog.Services.AutoMapper.Profiles;
 using Blog.Services.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-builder.Services.AddAutoMapper(typeof(Program));//7,0!! Startup?
+builder.Services.AddAutoMapper(typeof(CategoryProfile),typeof(ArticleProfile));//7,0!! Startup?
 builder.Services.LoadMyServices();
 
 

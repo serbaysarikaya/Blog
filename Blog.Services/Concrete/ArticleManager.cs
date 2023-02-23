@@ -156,7 +156,7 @@ namespace Blog.Services.Concrete
             return new Result(ResultStatus.Error, "Böyle bir makale bulunamamıştır.");
         }
 
-        public async Task<IResult> Uptade(ArticleAddDto articleUpdateDto, string modifiedByName)
+        public async Task<IResult> Update(ArticleAddDto articleUpdateDto, string modifiedByName)
         {
             var article = _mapper.Map<Article>(articleUpdateDto);
             article.ModifiedByName = modifiedByName;

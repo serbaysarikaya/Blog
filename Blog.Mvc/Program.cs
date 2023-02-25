@@ -1,12 +1,20 @@
 using Blog.Services.AutoMapper.Profiles;
 using Blog.Services.Extensions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-builder.Services.AddAutoMapper(typeof(CategoryProfile),typeof(ArticleProfile));//7,0!! Startup?
+
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonOptions(opt =>
+{
+    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    opt.JsonSerializerOptions.ReferenceHandler= ReferenceHandler.Preserve;
+});
+
+builder.Services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile));//7,0!! Startup?
 builder.Services.LoadMyServices();
 
 

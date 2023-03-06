@@ -33,7 +33,7 @@ namespace Blog.Services.Concrete
             article.UserId = 1;
             await _unitOfWork.Articles.AddAsync(article);
             await _unitOfWork.SaveAsync();
-            return new Result(ResultStatus.Succes, $"{articleAddDto.Title} başlıklı makale başarıyla eklemitir.");
+            return new Result(ResultStatus.Success, $"{articleAddDto.Title} başlıklı makale başarıyla eklemitir.");
 
         }
 
@@ -48,7 +48,7 @@ namespace Blog.Services.Concrete
                 article.ModifiedDate = DateTime.Now;
                 await _unitOfWork.Articles.UpdateAsync(article);
                 await _unitOfWork.SaveAsync();
-                return new Result(ResultStatus.Succes, $"{article.Title} başlıklı makale başarıyla silinmiştir.");
+                return new Result(ResultStatus.Success, $"{article.Title} başlıklı makale başarıyla silinmiştir.");
 
             }
             return new Result(ResultStatus.Error, "Böyle bir makale bulumamamıştır.");
@@ -59,10 +59,10 @@ namespace Blog.Services.Concrete
             var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId, a => a.User, a => a.Category);
             if (article != null)
             {
-                return new DataResult<ArticleDto>(ResultStatus.Succes, new ArticleDto
+                return new DataResult<ArticleDto>(ResultStatus.Success, new ArticleDto
                 {
                     Article = article,
-                    ResultStatus = ResultStatus.Succes
+                    ResultStatus = ResultStatus.Success
                 });
             }
             return new DataResult<ArticleDto>(ResultStatus.Error, "Böylebir Makale Bulunmadı", null);
@@ -75,10 +75,10 @@ namespace Blog.Services.Concrete
             var articles = await _unitOfWork.Articles.GelAllAsync(null, a => a.User, a => a.Category);
             if (articles.Count > -1)
             {
-                return new DataResult<ArticleListDto>(ResultStatus.Succes, new ArticleListDto
+                return new DataResult<ArticleListDto>(ResultStatus.Success, new ArticleListDto
                 {
                     Articles = articles,
-                    ResultStatus = ResultStatus.Succes
+                    ResultStatus = ResultStatus.Success
                 });
 
             }
@@ -95,10 +95,10 @@ namespace Blog.Services.Concrete
                 var articles = await _unitOfWork.Articles.GelAllAsync(a => a.CategoryId == categoryId && !a.IsDeleted && a.IsActive, ar => ar.User, ar => ar.Category);
                 if (articles.Count > -1)
                 {
-                    return new DataResult<ArticleListDto>(ResultStatus.Succes, new ArticleListDto
+                    return new DataResult<ArticleListDto>(ResultStatus.Success, new ArticleListDto
                     {
                         Articles = articles,
-                        ResultStatus = ResultStatus.Succes
+                        ResultStatus = ResultStatus.Success
                     });
 
                 }
@@ -115,10 +115,10 @@ namespace Blog.Services.Concrete
             var articles = await _unitOfWork.Articles.GelAllAsync(a => !a.IsDeleted, ar => ar.User, ar => ar.Category);
             if (articles.Count > -1)
             {
-                return new DataResult<ArticleListDto>(ResultStatus.Succes, new ArticleListDto
+                return new DataResult<ArticleListDto>(ResultStatus.Success, new ArticleListDto
                 {
                     Articles = articles,
-                    ResultStatus = ResultStatus.Succes
+                    ResultStatus = ResultStatus.Success
                 });
 
             }
@@ -130,10 +130,10 @@ namespace Blog.Services.Concrete
             var articles = await _unitOfWork.Articles.GelAllAsync(a => !a.IsDeleted && a.IsActive, ar => ar.User, ar => ar.Category);
             if (articles.Count > -1)
             {
-                return new DataResult<ArticleListDto>(ResultStatus.Succes, new ArticleListDto
+                return new DataResult<ArticleListDto>(ResultStatus.Success, new ArticleListDto
                 {
                     Articles = articles,
-                    ResultStatus = ResultStatus.Succes
+                    ResultStatus = ResultStatus.Success
                 });
 
             }
@@ -150,7 +150,7 @@ namespace Blog.Services.Concrete
 
                 await _unitOfWork.Articles.DeleteAsync(article);
                 await _unitOfWork.SaveAsync();
-                return new Result(ResultStatus.Succes, $"{article.Title} başlıklı makale başarıyla veri tabanından silinmiştir.");
+                return new Result(ResultStatus.Success, $"{article.Title} başlıklı makale başarıyla veri tabanından silinmiştir.");
 
             }
             return new Result(ResultStatus.Error, "Böyle bir makale bulunamamıştır.");
@@ -162,7 +162,7 @@ namespace Blog.Services.Concrete
             article.ModifiedByName = modifiedByName;
             await _unitOfWork.Articles.UpdateAsync(article);
             await _unitOfWork.SaveAsync();
-            return new Result(ResultStatus.Succes, $"{articleUpdateDto.Title} başlıklı makale başarıyla güncellenmiştir.");
+            return new Result(ResultStatus.Success, $"{articleUpdateDto.Title} başlıklı makale başarıyla güncellenmiştir.");
 
 
         }

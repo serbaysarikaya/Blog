@@ -39,7 +39,7 @@ namespace Blog.Mvc.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _categoryService.Add(categoryAddDto,"Serbay Sarıkaya");
-                if (result.ResultStatus == ResultStatus.Succes)
+                if (result.ResultStatus == ResultStatus.Success)
                 {
                     var categoryAddAjaxModel = JsonSerializer.Serialize(new CategoryAddAjaxViewModel
                     {

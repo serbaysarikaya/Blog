@@ -5,7 +5,7 @@
     ViewBag.Title = "kategoriler Index";
 }
 
-@if (Model.ResultStatus == ResultStatus.Succes)
+@if (Model.ResultStatus == ResultStatus.Success)
 {
     <div id="modalPlaceHolder" aria-hidden="true"></div>
     <div class="card mb-4 mt-2">
@@ -77,65 +77,65 @@
     {
     <script>
         $(document).ready(function () {
-            $('#categoriesTable').DataTable({
-                dom:
-                    "<'row'<'col-sm-3'l><'col-sm-6 text-center'B><'col-sm-3'f>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                buttons: [
-                    {
-                        text: 'Ekle',
-                        attr: {
-                            id: "btnAdd",
+        @* DataTables start here. *@
+                $('#categoriesTable').DataTable({
+                    dom:
+                        "<'row'<'col-sm-3'l><'col-sm-6 text-center'B><'col-sm-3'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    buttons: [
+                        {
+                            text: 'Ekle',
+                            attr: {
+                                id: "btnAdd",
+                            },
+                            className: 'btn btn-success',
+                            action: function (e, dt, node, config) {
+
+                            }
                         },
-                        className: 'btn btn-success',
-                        action: function (e, dt, node, config) {
-
+                        {
+                            text: 'Yenile',
+                            className: 'btn btn-warning',
+                            action: function (e, dt, node, config) {
+                                alert('Yenile butonuna basıldı.');
+                            }
                         }
-                    },
-                    {
-                        text: 'Yenile',
-                        className: 'btn btn-warning',
-                        action: function (e, dt, node, config) {
-                            alert('Yenile butonuna basıldı.');
-                        }
-                    }
-                ],
-                language: {
-                    "sDecimal": ",",
-                    "sEmptyTable": "Tabloda herhangi bir veri mevcut değil",
-                    "sInfo": "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
-                    "sInfoEmpty": "Kayıt yok",
-                    "sInfoFiltered": "(_MAX_ kayıt içerisinden bulunan)",
-                    "sInfoPostFix": "",
-                    "sInfoThousands": ".",
-                    "sLengthMenu": "Sayfada _MENU_ kayıt göster",
-                    "sLoadingRecords": "Yükleniyor...",
-                    "sProcessing": "İşleniyor...",
-                    "sSearch": "Ara:",
-                    "sZeroRecords": "Eşleşen kayıt bulunamadı",
-                    "oPaginate": {
-                        "sFirst": "İlk",
-                        "sLast": "Son",
-                        "sNext": "Sonraki",
-                        "sPrevious": "Önceki"
-                    },
-                    "oAria": {
-                        "sSortAscending": ": artan sütun sıralamasını aktifleştir",
-                        "sSortDescending": ": azalan sütun sıralamasını aktifleştir"
-                    },
-                    "select": {
-                        "rows": {
-                            "_": "%d kayıt seçildi",
-                            "0": "",
-                            "1": "1 kayıt seçildi"
+                    ],
+                    language: {
+                        "sDecimal": ",",
+                        "sEmptyTable": "Tabloda herhangi bir veri mevcut değil",
+                        "sInfo": "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
+                        "sInfoEmpty": "Kayıt yok",
+                        "sInfoFiltered": "(_MAX_ kayıt içerisinden bulunan)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ".",
+                        "sLengthMenu": "Sayfada _MENU_ kayıt göster",
+                        "sLoadingRecords": "Yükleniyor...",
+                        "sProcessing": "İşleniyor...",
+                        "sSearch": "Ara:",
+                        "sZeroRecords": "Eşleşen kayıt bulunamadı",
+                        "oPaginate": {
+                            "sFirst": "İlk",
+                            "sLast": "Son",
+                            "sNext": "Sonraki",
+                            "sPrevious": "Önceki"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": artan sütun sıralamasını aktifleştir",
+                            "sSortDescending": ": azalan sütun sıralamasını aktifleştir"
+                        },
+                        "select": {
+                            "rows": {
+                                "_": "%d kayıt seçildi",
+                                "0": "",
+                                "1": "1 kayıt seçildi"
+                            }
                         }
                     }
-                }
-            });
-        @* DataTables ends here *@
-        @*Ajax GET Getting the _CategoryAddPartial as Modal  From start here.*@
-
+                });
+        @* DataTables end here *@
+        @* Ajax GET / Getting the _CategoryAddPartial as Modal Form starts from here. *@
                 $(function () {
                     const url = '@Url.Action("Add", "Category")';
                     const placeHolderDiv = $('#modalPlaceHolder');
@@ -145,8 +145,8 @@
                             placeHolderDiv.find(".modal").modal('show');
                         });
                     });
-        @*Ajax GET Ajax Getting the _CategoryAddPartial as Modal  From end from here.*@
-        @*Ajax Post  Posting  the From data as CategryAddDto start from here.*@
+        @* Ajax GET / Getting the _CategoryAddPartial as Modal Form ends here. *@
+        @* Ajax POST / Posting the FormData as CategoryAddDto starts from here. *@
                         placeHolderDiv.on('click',
                             '#btnSave',
                             function (event) {
@@ -164,23 +164,30 @@
                                     if (isValid) {
                                         placeHolderDiv.find('.modal').modal('hide');
                                         const newTableRow = `
-                                                <tr>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.Id}</td>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.Name}</td>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.Description}</td>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.IsActive}</td>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.IsDeleted}</td>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.Note}</td>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.CreatedDate}</td>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.CreatedByName}</td>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.ModifiedDate}</td>
-                                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.ModifiedByName}</td>
-                                                                </tr>`;
+                                                        <tr>
+                                                                            <td>${categoryAddAjaxModel.CategoryDto.Category.Id}</td>
+                                                                            <td>${categoryAddAjaxModel.CategoryDto.Category.Name}</td>
+                                                                            <td>${categoryAddAjaxModel.CategoryDto.Category.Description}</td>
+                                                                            <td>${convertFirstLetterToUpperCase(categoryAddAjaxModel.CategoryDto.Category.IsActive.toString())}</td>
+                                                                            <td>${convertFirstLetterToUpperCase(categoryAddAjaxModel.CategoryDto.Category.IsDeleted.toString())}</td>
+                                                                            <td>${categoryAddAjaxModel.CategoryDto.Category.Note}</td>
+                                                                            <td>${convertToShortDate(categoryAddAjaxModel.CategoryDto.Category.CreatedDate)}</td>
+                                                                            <td>${categoryAddAjaxModel.CategoryDto.Category.CreatedByName}</td>
+                                                                            <td>${convertToShortDate(categoryAddAjaxModel.CategoryDto.Category.ModifiedDate)}</td>
+                                                                            <td>${categoryAddAjaxModel.CategoryDto.Category.ModifiedByName}</td>
+                                                                        </tr>`;
                                         const newTableRowObject = $(newTableRow);
                                         newTableRowObject.hide();
                                         $('#categoriesTable').append(newTableRowObject);
                                         newTableRowObject.fadeIn(3500);
                                         toastr.success(`${categoryAddAjaxModel.CategoryDto.Message}`, 'Başarılı İşlem!');
+                                    } else {
+                                        let summaryText = "";
+                                        $('#validation-summary > ul > li').each(function () {
+                                            let text = $(this).text();
+                                            summaryText = `*${text}\n`;
+                                        });
+                                        toastr.warning(summaryText);
                                     }
                                 });
                             });

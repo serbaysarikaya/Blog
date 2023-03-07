@@ -2,9 +2,9 @@
 using Blog.Mvc.Areas.Admin.Models;
 using Blog.Services.Abstract;
 using Blog.Shared.Utilities.Results.ComplexTypes;
-using Blog.Shared.Utilities.Results.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Blog.Mvc.Areas.Admin.Controllers
 {
@@ -55,6 +55,15 @@ namespace Blog.Mvc.Areas.Admin.Controllers
                 CategoryAddPartial = await this.RenderViewToStringAsync("_CategoryAddPartial", categoryAddDto)
             });
             return Json(categoryAddAjaxErrorModel);
+        }
+        public async Task<JsonResult> GetAllCategories()
+        {
+            var result = await _categoryService.GetAll();
+            var cartegories = JsonSerializer.Serialize(result.Data, new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            }) ;
+            return Json(cartegories);
         }
 
     }

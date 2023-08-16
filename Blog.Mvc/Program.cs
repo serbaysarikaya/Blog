@@ -1,5 +1,6 @@
 using Blog.Services.AutoMapper.Profiles;
 using Blog.Services.Extensions;
+using Microsoft.Data.SqlClient;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -11,12 +12,27 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonOptions(opt =>
 {
     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    opt.JsonSerializerOptions.ReferenceHandler= ReferenceHandler.Preserve;
+    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
 
-builder.Services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile));//7,0!! Startup?
+builder.Services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile)); // 7.0!! Startup?
 builder.Services.LoadMyServices();
-
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = new PathString("/Admin/User/Login");
+    options.LogoutPath = new PathString("/Admin/User/Logout"); // Fix: Change "LoginPath" to "LogoutPath"
+    options.Cookie = new CookieBuilder
+    {
+        Name = "Blog",
+        HttpOnly = true,
+        SameSite = SameSiteMode.Strict,
+        SecurePolicy = CookieSecurePolicy.SameAsRequest
+    };
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = System.TimeSpan.FromDays(7);
+    options.AccessDeniedPath = new PathString("/Admin/User/AccessDenied");
+});
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -24,38 +40,28 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseStatusCodePages();
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-//Bayrama sor
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapAreaControllerRoute(
-//        name: "Admin",
-//        areaName: "Admin",
-//        pattern: "Admin/{controller=Home}/{action=Index}/{id?}"
-//    );
-//    endpoints.MapDefaultControllerRoute();
-//});
+
+app.UseRouting();
+
+
 
 app.MapAreaControllerRoute(
-            name: "Admin",
-            areaName: "Admin",
-            pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+    name: "Admin",
+    areaName: "Admin",
+    pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
-
-app.UseRouting();
-
-app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.Run();
+app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();

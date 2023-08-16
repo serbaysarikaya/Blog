@@ -15,8 +15,7 @@ namespace Blog.Data.Concrete
         private EfCategoryRepository _categoryRepository;
         private EfArticleRepository _articleRepository;
         private EfCommentRepository _commentRepository;
-        private EfRoleRepository _roleRepository;
-        private EfUserRepository _userRepository;
+     
 
 
         public UnitOfWork(BlogContext context)
@@ -33,9 +32,7 @@ namespace Blog.Data.Concrete
 
         public ICommentRepository Comments => _commentRepository ?? new EfCommentRepository(_context);
 
-        public IRoleRepository Roles => _roleRepository ?? new EfRoleRepository(_context);
-
-        public IUserRepository Users => _userRepository ?? new EfUserRepository(_context);
+     
 
         public async Task<int> SaveAsync()
         {

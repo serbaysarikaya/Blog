@@ -1,3 +1,4 @@
+using Blog.Mvc.AutoMapper.Profiles;
 using Blog.Services.AutoMapper.Profiles;
 using Blog.Services.Extensions;
 using Microsoft.Data.SqlClient;
@@ -15,7 +16,7 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonO
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
 
-builder.Services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile)); // 7.0!! Startup?
+builder.Services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile),typeof(UserProfile)); // 7.0!! Startup?
 builder.Services.LoadMyServices();
 builder.Services.ConfigureApplicationCookie(options =>
 {

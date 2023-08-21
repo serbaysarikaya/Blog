@@ -16,12 +16,12 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonO
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
 
-builder.Services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile),typeof(UserProfile)); // 7.0!! Startup?
+builder.Services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile), typeof(UserProfile));
 builder.Services.LoadMyServices();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = new PathString("/Admin/User/Login");
-    options.LogoutPath = new PathString("/Admin/User/Logout"); // Fix: Change "LoginPath" to "LogoutPath"
+    options.LogoutPath = new PathString("/Admin/User/Logout");
     options.Cookie = new CookieBuilder
     {
         Name = "Blog",
@@ -50,19 +50,23 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization(); // Doðru sýralama burada olmalý
 
+app.UseSession();
 
 app.MapAreaControllerRoute(
     name: "Admin",
     areaName: "Admin",
     pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+});
 
 app.Run();
-app.UseSession();
-app.UseAuthentication();
-app.UseAuthorization();

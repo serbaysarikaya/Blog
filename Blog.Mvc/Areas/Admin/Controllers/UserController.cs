@@ -4,6 +4,7 @@ using Blog.Entities.Dtos;
 using Blog.Mvc.Areas.Admin.Models;
 using Blog.Shared.Utilities.Extensions;
 using Blog.Shared.Utilities.Results.ComplexTypes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,18 +19,70 @@ namespace Blog.Mvc.Areas.Admin.Controllers
     {
 
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IWebHostEnvironment _env;
         private readonly IMapper _mapper;
 
-        public UserController(UserManager<User> userManager, IWebHostEnvironment env, IMapper mapper = null)
+        public UserController(UserManager<User> userManager, IWebHostEnvironment env, IMapper mapper, SignInManager<User> signInManager )
         {
             _userManager = userManager;
             _env = env;
             _mapper = mapper;
+            _signInManager = signInManager;
         }
 
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> Index()
+        {
+            var users = await _userManager.Users.ToListAsync();
+
+            return View(new UserListDto
+            {
+                Users = users,
+                ResultStatus = ResultStatus.Success
+            });
+        }
         [HttpGet]
-        public async Task<JsonResult> GetAllUsers()
+        public IActionResult Login()
+        {
+            return View("UserLogin");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginDto userLoginDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(userLoginDto.Email);
+                if (user!=null)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(user, userLoginDto.Password, userLoginDto.RememberMe, false);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "E-pposta adresiniz veya şifreniz yanlıştır.");
+                        return View("UserLogin");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "E-pposta adresiniz veya şifreniz yanlıştır.");
+                    return View("UserLogin");
+                }
+            }
+            else
+            {
+                return View("UserLogin");
+            }
+           
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+               public async Task<JsonResult> GetAllUsers()
         {
             var users = await _userManager.Users.ToListAsync();
             var userListDato = JsonSerializer.Serialize(new UserListDto
@@ -43,30 +96,20 @@ namespace Blog.Mvc.Areas.Admin.Controllers
             return Json(userListDato);
         }
 
-
-        public async Task<IActionResult> Index()
-        {
-            var users = await _userManager.Users.ToListAsync();
-
-            return View(new UserListDto
-            {
-                Users = users,
-                ResultStatus = ResultStatus.Success
-            });
-        }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public IActionResult Add()
+             public IActionResult Add()
         {
             return PartialView("_UserAddPartial");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Add(UserAddDto userAddDto)
+                public async Task<IActionResult> Add(UserAddDto userAddDto)
         {
             if (ModelState.IsValid)
             {
-                userAddDto.Picture = await ImageUpload(userAddDto.UserName,userAddDto.PictureFile);
+                userAddDto.Picture = await ImageUpload(userAddDto.UserName, userAddDto.PictureFile);
                 var user = _mapper.Map<User>(userAddDto);
                 var result = await _userManager.CreateAsync(user, userAddDto.Password);
                 if (result.Succeeded)
@@ -107,7 +150,14 @@ namespace Blog.Mvc.Areas.Admin.Controllers
             return Json(userAddAjaxModelStateErrorModel);
 
         }
+        [HttpGet]
+        public ViewResult AccessDenied()
+        {
+            return View();
+        }
 
+
+        [Authorize(Roles = "Admin")]
         public async Task<JsonResult> Delete(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -139,6 +189,7 @@ namespace Blog.Mvc.Areas.Admin.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<PartialViewResult> Update(int userId)
         {
@@ -146,6 +197,8 @@ namespace Blog.Mvc.Areas.Admin.Controllers
             var userUpdateDto = _mapper.Map<UserUpdateDto>(user);
             return PartialView("_UserUpdatePartial", userUpdateDto);
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Update(UserUpdateDto userUpdateDto)
         {
@@ -207,6 +260,8 @@ namespace Blog.Mvc.Areas.Admin.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin,Editor")]
+
         public async Task<string> ImageUpload(string userName, IFormFile pictureFile)
         {
             string wwwroot = _env.WebRootPath;
@@ -224,9 +279,11 @@ namespace Blog.Mvc.Areas.Admin.Controllers
 
         }
 
+        [Authorize(Roles = "Admini,Editor")]
+
         public bool ImageDelete(string pictureName)
         {
-            
+
             string wwwroot = _env.WebRootPath;
 
             var fileToDelete = Path.Combine($"{wwwroot}/img", pictureName);

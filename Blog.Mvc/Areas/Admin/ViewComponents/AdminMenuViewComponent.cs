@@ -24,7 +24,7 @@ namespace Blog.Mvc.Areas.Admin.ViewComponents
             {
                 User = user,
                 Roles = roles
-            })
+            });
         }
     }
 }

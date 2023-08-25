@@ -165,7 +165,7 @@
                         }
                     },
                     error: function (err) {
-                        console.log(err);
+                        toastr.error(`${err.responseText}`, 'Hata!');
                     }
                 });
             });
@@ -262,11 +262,19 @@
                     success: function (data) {
                         const userUpdateAjaxModel = jQuery.parseJSON(data);
                         console.log(userUpdateAjaxModel);
-                        const id = userUpdateAjaxModel.UserDto.User.Id;
-                        const tableRow = $(`[name="${id}"]`);
+                        let id;
+                        let tableRow;
+                        if (userUpdateAjaxModel.UserDto !== null) {
+                            id = userUpdateAjaxModel.UserDto.User.Id;
+                            tableRow = $(`[name="${id}"]`);
+                        }
+
+
+
                         const newFormBody = $('.modal-body', userUpdateAjaxModel.UserUpdatePartial);
                         placeHolderDiv.find('.modal-body').replaceWith(newFormBody);
                         const isValid = newFormBody.find('[name="IsValid"]').val() === 'True';
+
                         if (isValid) {
                             placeHolderDiv.find('.modal').modal('hide');
                             dataTable.row(tableRow).data([
@@ -292,8 +300,8 @@
                             toastr.warning(summaryText);
                         }
                     },
-                    error: function (error) {
-                        console.log(error);
+                    error: function (err) {
+                        toastr.error(`${err.responseText}`, 'Hata!');
                     }
                 });
             });

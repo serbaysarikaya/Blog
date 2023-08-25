@@ -1,4 +1,6 @@
 using Blog.Mvc.AutoMapper.Profiles;
+using Blog.Mvc.Helpers.Abstract;
+using Blog.Mvc.Helpers.Concrete;
 using Blog.Services.AutoMapper.Profiles;
 using Blog.Services.Extensions;
 using Microsoft.Data.SqlClient;
@@ -18,6 +20,7 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonO
 
 builder.Services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile), typeof(UserProfile));
 builder.Services.LoadMyServices();
+builder.Services.AddScoped<IImageHelper,ImageHelper>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = new PathString("/Admin/User/Login");

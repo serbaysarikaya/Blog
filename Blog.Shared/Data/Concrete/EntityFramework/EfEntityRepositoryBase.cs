@@ -12,7 +12,7 @@ namespace Blog.Shared.Data.Concrete.EntityFramework
 {
     public class EfEntityRepositoryBase<TEntity> : IEntityRepository<TEntity> where TEntity : class, IEntity, new()
     {
-        private readonly DbContext _context;
+        protected readonly DbContext _context;
 
         public EfEntityRepositoryBase(DbContext context)
         {
@@ -36,15 +36,15 @@ namespace Blog.Shared.Data.Concrete.EntityFramework
 
         public async Task DeleteAsync(TEntity entity)
         {
-            await Task.Run(() => { _context.Set<TEntity>().Remove(entity);});
+            await Task.Run(() => { _context.Set<TEntity>().Remove(entity); });
         }
 
         public async Task<IList<TEntity>> GelAllAsync(Expression<Func<TEntity, bool>> predicate = null, params Expression<Func<TEntity, object>>[] includdeProperties)
         {
-            IQueryable<TEntity> query= _context.Set<TEntity>();
-            if (predicate!=null)
+            IQueryable<TEntity> query = _context.Set<TEntity>();
+            if (predicate != null)
             {
-               query= query.Where(predicate);
+                query = query.Where(predicate);
             }
             if (includdeProperties.Any())
             {
@@ -60,10 +60,8 @@ namespace Blog.Shared.Data.Concrete.EntityFramework
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includdeProperties)
         {
             IQueryable<TEntity> query = _context.Set<TEntity>();
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
+            query = query.Where(predicate);
+
             if (includdeProperties.Any())
             {
                 foreach (var includdeProperty in includdeProperties)
@@ -78,7 +76,7 @@ namespace Blog.Shared.Data.Concrete.EntityFramework
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-             await Task.Run(() => { _context.Set<TEntity>().Update(entity); });
+            await Task.Run(() => { _context.Set<TEntity>().Update(entity); });
             return entity;
         }
     }

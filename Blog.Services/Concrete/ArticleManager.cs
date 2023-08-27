@@ -3,6 +3,7 @@ using Blog.Data.Abstract;
 using Blog.Entities.Concrete;
 using Blog.Entities.Dtos;
 using Blog.Services.Abstract;
+using Blog.Services.Utilities;
 using Blog.Shared.Utilities.Results.Abstract;
 using Blog.Shared.Utilities.Results.ComplexTypes;
 using Blog.Shared.Utilities.Results.Concrete;
@@ -33,7 +34,7 @@ namespace Blog.Services.Concrete
             article.UserId = 1;
             await _unitOfWork.Articles.AddAsync(article);
             await _unitOfWork.SaveAsync();
-            return new Result(ResultStatus.Success, $"{articleAddDto.Title} başlıklı makale başarıyla eklemitir.");
+            return new Result(ResultStatus.Success,Messages.Article.Add(article.Title));
 
         }
 
@@ -48,10 +49,10 @@ namespace Blog.Services.Concrete
                 article.ModifiedDate = DateTime.Now;
                 await _unitOfWork.Articles.UpdateAsync(article);
                 await _unitOfWork.SaveAsync();
-                return new Result(ResultStatus.Success, $"{article.Title} başlıklı makale başarıyla silinmiştir.");
+                return new Result(ResultStatus.Success,Messages.Article.Delete(article.Title));
 
             }
-            return new Result(ResultStatus.Error, "Böyle bir makale bulumamamıştır.");
+            return new Result(ResultStatus.Error, Messages.Article.NotFound(isPlural: false));
         }
 
         public async Task<IDataResult<ArticleDto>> Get(int articleId)
@@ -65,7 +66,7 @@ namespace Blog.Services.Concrete
                     ResultStatus = ResultStatus.Success
                 });
             }
-            return new DataResult<ArticleDto>(ResultStatus.Error, "Böylebir Makale Bulunmadı", null);
+            return new DataResult<ArticleDto>(ResultStatus.Error, Messages.Article.NotFound(isPlural: false), null);
 
 
         }
@@ -82,7 +83,7 @@ namespace Blog.Services.Concrete
                 });
 
             }
-            return new DataResult<ArticleListDto>(ResultStatus.Error, "Makaleler Bulunamadı", null);
+            return new DataResult<ArticleListDto>(ResultStatus.Error, Messages.Article.NotFound(isPlural: true), null);
 
 
         }
@@ -102,10 +103,10 @@ namespace Blog.Services.Concrete
                     });
 
                 }
-                return new DataResult<ArticleListDto>(ResultStatus.Error, "Makaleler Bulunamadı", null);
+                return new DataResult<ArticleListDto>(ResultStatus.Error, Messages.Article.NotFound(isPlural: true), null);
 
             }
-            return new DataResult<ArticleListDto>(ResultStatus.Error, "Böyle bir kategori bulunamadı", null);
+            return new DataResult<ArticleListDto>(ResultStatus.Error, Messages.Article.NotFound(isPlural: false), null);
 
 
         }
@@ -122,7 +123,7 @@ namespace Blog.Services.Concrete
                 });
 
             }
-            return new DataResult<ArticleListDto>(ResultStatus.Error, "Makaleler Bulunamadı", null);
+            return new DataResult<ArticleListDto>(ResultStatus.Error, Messages.Article.NotFound(isPlural: true), null);
         }
 
         public async Task<IDataResult<ArticleListDto>> GetAllByNonDeleteAndActive()
@@ -137,7 +138,7 @@ namespace Blog.Services.Concrete
                 });
 
             }
-            return new DataResult<ArticleListDto>(ResultStatus.Error, "Makaleler Bulunamadı", null);
+            return new DataResult<ArticleListDto>(ResultStatus.Error, Messages.Article.NotFound(isPlural: true), null);
 
         }
 
@@ -150,10 +151,10 @@ namespace Blog.Services.Concrete
 
                 await _unitOfWork.Articles.DeleteAsync(article);
                 await _unitOfWork.SaveAsync();
-                return new Result(ResultStatus.Success, $"{article.Title} başlıklı makale başarıyla veri tabanından silinmiştir.");
+                return new Result(ResultStatus.Success, Messages.Article.Update(article.Title));
 
             }
-            return new Result(ResultStatus.Error, "Böyle bir makale bulunamamıştır.");
+            return new Result(ResultStatus.Error, Messages.Article.NotFound(isPlural: false));
         }
 
         public async Task<IResult> Update(ArticleAddDto articleUpdateDto, string modifiedByName)
@@ -162,7 +163,7 @@ namespace Blog.Services.Concrete
             article.ModifiedByName = modifiedByName;
             await _unitOfWork.Articles.UpdateAsync(article);
             await _unitOfWork.SaveAsync();
-            return new Result(ResultStatus.Success, $"{articleUpdateDto.Title} başlıklı makale başarıyla güncellenmiştir.");
+            return new Result(ResultStatus.Success, Messages.Article.Update(articleUpdateDto.Title));
 
 
         }

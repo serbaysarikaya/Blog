@@ -20,6 +20,8 @@ namespace Blog.Services.Abstract
         Task<IResult> Update(ArticleAddDto articleUpdateDto, string modifiedByName);
         Task<IResult> Delete(int articleId, string modifiedByName);
         Task<IResult> HardDelete(int articleId);
+        Task<IDataResult<int>> Count();
+        Task<IDataResult<int>> CountIsDeleted();
 
     }
 }

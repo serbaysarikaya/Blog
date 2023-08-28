@@ -167,5 +167,19 @@ namespace Blog.Services.Concrete
 
 
         }
+
+        public async Task<IDataResult<int>> Count()
+        {
+            var articlesCount = await _unitOfWork.Articles.CountAsyc();
+
+            return articlesCount > -1 ? new DataResult<int>(ResultStatus.Success, articlesCount) : new DataResult<int>(ResultStatus.Error, $"Beklenmeyen bir hata ile karşılasıldı.", -1);
+        }
+
+        public async Task<IDataResult<int>> CountIsDeleted()
+        {
+            var articlesCount = await _unitOfWork.Articles.CountAsyc(a=>!a.IsDeleted);
+
+            return articlesCount > -1 ? new DataResult<int>(ResultStatus.Success, articlesCount) : new DataResult<int>(ResultStatus.Error, $"Beklenmeyen bir hata ile karşılasıldı.", -1); ;
+        }
     }
 }

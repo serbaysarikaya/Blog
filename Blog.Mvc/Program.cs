@@ -7,8 +7,13 @@ using Microsoft.Data.SqlClient;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.json");
 // Add services to the container.
 builder.Services.AddRazorPages();
 
@@ -19,7 +24,7 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonO
 });
 
 builder.Services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile), typeof(UserProfile));
-builder.Services.LoadMyServices();
+builder.Services.LoadMyServices(connectionString: builder.Configuration.GetConnectionString("LocalDB"));
 builder.Services.AddScoped<IImageHelper,ImageHelper>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -39,7 +44,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddSession();
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

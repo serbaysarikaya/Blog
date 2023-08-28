@@ -15,11 +15,16 @@ namespace Blog.Data.Concrete.EntityFramework.Contexts
         public DbSet<Article> Articles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }
-      
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public BlogContext(DbContextOptions<BlogContext> options) : base(options)
         {
-            optionsBuilder.UseSqlServer(connectionString:@"Data Source=DESKTOP-UO2Q254;Initial Catalog=ProgrammersBlog;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+
         }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer(connectionString: @"Data Source=DESKTOP-UO2Q254;Initial Catalog=ProgrammersBlog;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+        //}
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ArticleMap());

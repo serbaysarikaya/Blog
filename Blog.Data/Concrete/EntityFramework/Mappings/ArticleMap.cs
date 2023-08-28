@@ -42,7 +42,7 @@ namespace Blog.Data.Concrete.EntityFramework.Mappings
             builder.Property(a => a.Note).HasMaxLength(500);
             builder.HasOne<Category>(a => a.Category).WithMany(c => c.Articles).HasForeignKey(a => a.CategoryId);
             builder.HasOne<User>(a => a.User).WithMany(u => u.Articles).HasForeignKey(a => a.UserId);
-            builder.ToTable("Aticles");
+            builder.ToTable("Articles");
             //builder.HasData(
             //    new Article
             //    {

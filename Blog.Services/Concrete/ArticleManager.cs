@@ -26,7 +26,7 @@ namespace Blog.Services.Concrete
             _mapper = mapper;
         }
 
-        public async Task<IResult> Add(ArticleAddDto articleAddDto, string createByName)
+        public async Task<IResult> AddAsync(ArticleAddDto articleAddDto, string createByName)
         {
             var article = _mapper.Map<Article>(articleAddDto);
             article.CreatedByName = createByName;
@@ -38,7 +38,7 @@ namespace Blog.Services.Concrete
 
         }
 
-        public async Task<IResult> Delete(int articleId, string modifiedByName)
+        public async Task<IResult> DeleteAsync(int articleId, string modifiedByName)
         {
             var result = await _unitOfWork.Articles.AnyAsync(a => a.Id == articleId);
             if (result)
@@ -55,7 +55,7 @@ namespace Blog.Services.Concrete
             return new Result(ResultStatus.Error, Messages.Article.NotFound(isPlural: false));
         }
 
-        public async Task<IDataResult<ArticleDto>> Get(int articleId)
+        public async Task<IDataResult<ArticleDto>> GetAsync(int articleId)
         {
             var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId, a => a.User, a => a.Category);
             if (article != null)
@@ -71,7 +71,7 @@ namespace Blog.Services.Concrete
 
         }
 
-        public async Task<IDataResult<ArticleListDto>> GetAll()
+        public async Task<IDataResult<ArticleListDto>> GetAllAsync()
         {
             var articles = await _unitOfWork.Articles.GelAllAsync(null, a => a.User, a => a.Category);
             if (articles.Count > -1)
@@ -88,7 +88,7 @@ namespace Blog.Services.Concrete
 
         }
 
-        public async Task<IDataResult<ArticleListDto>> GetAllByCategory(int categoryId)
+        public async Task<IDataResult<ArticleListDto>> GetAllByCategoryAsync(int categoryId)
         {
             var result = await _unitOfWork.Categories.AnyAsync(c => c.Id == categoryId);
             if (result)
@@ -111,7 +111,7 @@ namespace Blog.Services.Concrete
 
         }
 
-        public async Task<IDataResult<ArticleListDto>> GetAllByNonDelete()
+        public async Task<IDataResult<ArticleListDto>> GetAllByNonDeleteAsync()
         {
             var articles = await _unitOfWork.Articles.GelAllAsync(a => !a.IsDeleted, ar => ar.User, ar => ar.Category);
             if (articles.Count > -1)
@@ -126,7 +126,7 @@ namespace Blog.Services.Concrete
             return new DataResult<ArticleListDto>(ResultStatus.Error, Messages.Article.NotFound(isPlural: true), null);
         }
 
-        public async Task<IDataResult<ArticleListDto>> GetAllByNonDeleteAndActive()
+        public async Task<IDataResult<ArticleListDto>> GetAllByNonDeleteAndActiveAsync()
         {
             var articles = await _unitOfWork.Articles.GelAllAsync(a => !a.IsDeleted && a.IsActive, ar => ar.User, ar => ar.Category);
             if (articles.Count > -1)
@@ -142,7 +142,7 @@ namespace Blog.Services.Concrete
 
         }
 
-        public async Task<IResult> HardDelete(int articleId)
+        public async Task<IResult> HardDeleteAsync(int articleId)
         {
             var result = await _unitOfWork.Articles.AnyAsync(a => a.Id == articleId);
             if (result)
@@ -157,7 +157,7 @@ namespace Blog.Services.Concrete
             return new Result(ResultStatus.Error, Messages.Article.NotFound(isPlural: false));
         }
 
-        public async Task<IResult> Update(ArticleAddDto articleUpdateDto, string modifiedByName)
+        public async Task<IResult> UpdateAsync(ArticleAddDto articleUpdateDto, string modifiedByName)
         {
             var article = _mapper.Map<Article>(articleUpdateDto);
             article.ModifiedByName = modifiedByName;
@@ -168,14 +168,14 @@ namespace Blog.Services.Concrete
 
         }
 
-        public async Task<IDataResult<int>> Count()
+        public async Task<IDataResult<int>> CountAsync()
         {
             var articlesCount = await _unitOfWork.Articles.CountAsyc();
 
             return articlesCount > -1 ? new DataResult<int>(ResultStatus.Success, articlesCount) : new DataResult<int>(ResultStatus.Error, $"Beklenmeyen bir hata ile karşılasıldı.", -1);
         }
 
-        public async Task<IDataResult<int>> CountIsDeleted()
+        public async Task<IDataResult<int>> CountByNonDeletedAsync()
         {
             var articlesCount = await _unitOfWork.Articles.CountAsyc(a=>!a.IsDeleted);
 

@@ -22,7 +22,7 @@ namespace Blog.Services.Concrete
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<IDataResult<int>> Count()
+        public async Task<IDataResult<int>> CountAsync()
         {
             var commentCount = await _unitOfWork.Comments.CountAsyc();
 
@@ -30,7 +30,7 @@ namespace Blog.Services.Concrete
 
         }
 
-        public async Task<IDataResult<int>> CountIsDeleted()
+        public async Task<IDataResult<int>> CountByNonDeletedAsync()
         {
 
             var commentCount = await _unitOfWork.Comments.CountAsyc(co=>!co.IsDeleted);

@@ -37,12 +37,12 @@
                                 $.each(categoryListDto.Categories.$values,
                                     function (index, category) {
                                         tableBody += `
-                                                <tr>
+                                                <tr name=${category.Id}>
                                     <td>${category.Id}</td>
                                     <td>${category.Name}</td>
                                     <td>${category.Description}</td>
-                                    <td>${convertFirstLetterToUpperCase(category.IsActive.toString())}</td>
-                                    <td>${convertFirstLetterToUpperCase(category.IsDeleted.toString())}</td>
+                                    <td>${category.IsActive ? "Evet" : "Hayır"}</td>
+                                    <td>${category.IsDeleted ? "Evet" : "Hayır"}</td>
                                     <td>${category.Note}</td>
                                     <td>${convertToShortDate(category.CreatedDate)}</td>
                                     <td>${category.CreatedByName}</td>
@@ -143,8 +143,8 @@
                                                     <td>${categoryAddAjaxModel.CategoryDto.Category.Id}</td>
                                                     <td>${categoryAddAjaxModel.CategoryDto.Category.Name}</td>
                                                     <td>${categoryAddAjaxModel.CategoryDto.Category.Description}</td>
-                                                    <td>${convertFirstLetterToUpperCase(categoryAddAjaxModel.CategoryDto.Category.IsActive.toString())}</td>
-                                                    <td>${convertFirstLetterToUpperCase(categoryAddAjaxModel.CategoryDto.Category.IsDeleted.toString())}</td>
+                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.IsActive ? "Evet" : "Hayır"}</td>
+                                                    <td>${categoryAddAjaxModel.CategoryDto.Category.IsDeleted ? "Evet" : "Hayır"}</td>
                                                     <td>${categoryAddAjaxModel.CategoryDto.Category.Note}</td>
                                                     <td>${convertToShortDate(categoryAddAjaxModel.CategoryDto.Category.CreatedDate)}</td>
                                                     <td>${categoryAddAjaxModel.CategoryDto.Category.CreatedByName}</td>
@@ -266,21 +266,14 @@
                                 <tr name="${categoryUpdateAjaxModel.CategoryDto.Category.Id}">
                                                     <td>${categoryUpdateAjaxModel.CategoryDto.Category.Id}</td>
                                                     <td>${categoryUpdateAjaxModel.CategoryDto.Category.Name}</td>
-                                                    <td>${categoryUpdateAjaxModel.CategoryDto.Category
-                                .Description}</td>
-                                                    <td>${convertFirstLetterToUpperCase(categoryUpdateAjaxModel
-                                    .CategoryDto.Category.IsActive.toString())}</td>
-                                                    <td>${convertFirstLetterToUpperCase(categoryUpdateAjaxModel
-                                        .CategoryDto.Category.IsDeleted.toString())}</td>
+                                                    <td>${categoryUpdateAjaxModel.CategoryDto.Category.Description}</td>
+                                                    <td>${categoryUpdateAjaxModel.CategoryDto.Category.IsActive ? "Evet" : "Hayır"}</td>
+                                                    <td>${categoryUpdateAjaxModel.CategoryDto.Category.IsDeleted ? "Evet" : "Hayır"}</td>
                                                     <td>${categoryUpdateAjaxModel.CategoryDto.Category.Note}</td>
-                                                    <td>${convertToShortDate(categoryUpdateAjaxModel.CategoryDto
-                                            .Category.CreatedDate)}</td>
-                                                    <td>${categoryUpdateAjaxModel.CategoryDto.Category
-                                .CreatedByName}</td>
-                                                    <td>${convertToShortDate(categoryUpdateAjaxModel.CategoryDto
-                                    .Category.ModifiedDate)}</td>
-                                                    <td>${categoryUpdateAjaxModel.CategoryDto.Category
-                                .ModifiedByName}</td>
+                                                    <td>${convertToShortDate(categoryUpdateAjaxModel.CategoryDto.Category.CreatedDate)}</td>
+                                                    <td>${categoryUpdateAjaxModel.CategoryDto.Category.CreatedByName}</td>
+                                                    <td>${convertToShortDate(categoryUpdateAjaxModel.CategoryDto.Category.ModifiedDate)}</td>
+                                                    <td>${categoryUpdateAjaxModel.CategoryDto.Category.ModifiedByName}</td>
                                                     <td>
                                                         <button class="btn btn-primary btn-sm btn-update" data-id="${categoryUpdateAjaxModel.CategoryDto.Category.Id}"><span class="fas fa-edit"></span></button>
                                                         <button class="btn btn-danger btn-sm btn-delete" data-id="${categoryUpdateAjaxModel.CategoryDto.Category.Id

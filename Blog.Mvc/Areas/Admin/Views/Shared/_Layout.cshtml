@@ -8,6 +8,8 @@
     <meta name="author" content="" />
     <title>@ViewBag.Title - Admin Paneli | Blog</title>
     @await Html.PartialAsync("_LayoutCssPartial")
+    @await RenderSectionAsync("Styles",false)
+    <link href="~/AdminLTE/css/site.css" rel="stylesheet" />
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -38,7 +40,7 @@
                         </div>
                     }
                     @RenderBody()
-                    </div>
+                </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
@@ -46,7 +48,7 @@
                         <div class="text-muted">Tüm Hakları Saklıdır &copy; Blog</div>
                         <div>
                             <a href="#">Gizlilik Politikası</a>
-                            &middot;                           
+                            &middot;
                         </div>
                     </div>
                 </div>

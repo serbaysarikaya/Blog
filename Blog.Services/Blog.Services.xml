@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Blog.Services</name>
+    </assembly>
+    <members>
+        <member name="M:Blog.Services.Abstract.ICategoryService.GetCategoryUpdateDtoAsync(System.Int32)">
+            <summary>
+            Verilen ID parametresine ait kategori CategoryUpdateDto temsili geriye döner
+            </summary>
+            <param name="categoryId">0'dan büyü integer bir ID değeri</param>
+            <returns>Asenkron bir operasyon ile Task olarak işlemn sonucunu DataResult tipinde geriye döner</returns>
+        </member>
+        <member name="M:Blog.Services.Abstract.ICategoryService.AddAsync(Blog.Entities.Dtos.CategoryAddDto,System.String)">
+            <summary>
+            Verilen CategoryAddDto ce CreatedByName parametrelerine ait bilgiler ile yeni bir category ekler.
+            </summary>
+            <param name="categoryAddDto"> categoryAddDto tipinde eklenecke kategori bilgileri</param>
+            <param name="createdByName">string tipinde kullanıcının adı</param>
+            <returns>Asenkeron bir operasyon ile Task olarak bize ekleme işleminin sonucu DAtaResult tipinde döner.</returns>
+        </member>
+        <member name="M:ProgrammersBlog.Services.Concrete.CategoryManager.GetCategoryUpdateDtoAsync(System.Int32)">
+            <summary>
+            Verilen ID parametresine ait kategori CategoryUpdateDto temsili geriye döner
+            </summary>
+            <param name="categoryId">0'dan büyü integer bir ID değeri</param>
+            <returns>Asenkron bir operasyon ile Task olarak işlemn sonucunu DataResult tipinde geriye döner</returns>
+        </member>
+        <member name="M:ProgrammersBlog.Services.Concrete.CategoryManager.AddAsync(Blog.Entities.Dtos.CategoryAddDto,System.String)">
+            <summary>
+            Verilen CategoryAddDto ce CreatedByName parametrelerine ait bilgiler ile yeni bir category ekler.
+            </summary>
+            <param name="categoryAddDto"> categoryAddDto tipinde eklenecke kategori bilgileri</param>
+            <param name="createdByName">string tipinde kullanıcının adı</param>
+            <returns>Asenkeron bir operasyon ile Task olarak bize ekleme işleminin sonucu DAtaResult tipinde döner.</returns>
+        </member>
+    </members>
+</doc>
